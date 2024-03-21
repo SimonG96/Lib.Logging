@@ -39,5 +39,5 @@ public interface ILog : IAsyncDisposable
     /// Write a header to all loggers
     /// </summary>
     /// <returns>A <see cref="Task"/> to wait on</returns>
-    Task WriteLogHeader<T>();
+    Task WriteLogHeader<T>(string applicationName);
 }

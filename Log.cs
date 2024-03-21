@@ -175,9 +175,9 @@ public class Log : ILog
     /// Write a header to all loggers
     /// </summary>
     /// <returns>A <see cref="Task"/> to wait on</returns>
-    public async Task WriteLogHeader<T>()
+    public async Task WriteLogHeader<T>(string applicationName)
     {
-        await Write<T>($"DefenseMind {Versions.GetVersion()}");
+        await Write<T>($"{applicationName} {Versions.GetVersion()}");
         await Write<T>($"User: {Environment.UserName}");
         await Write<T>($"Date: {DateTime.Today:dd.MM.yyyy}");
         await Write<T>($"OS: {Environment.OSVersion}");
