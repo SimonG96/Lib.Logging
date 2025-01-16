@@ -16,10 +16,10 @@ public class ConsoleLogger : IConsoleLogger
     /// Write the given <see cref="string"/> to the <see cref="Console"/>
     /// </summary>
     /// <param name="message">The <see cref="ILogMessage{T}"/></param>
-    public async Task Write<T>(ILogMessage<T> message) => await Task.Run(() => Console.Write(message.ToString()));
+    public async Task Write<T>(ILogMessage<T> message) => await Task.Run(() => Console.Write(message.ToString())).ConfigureAwait(false);
 
     /// <summary>
     /// <see cref="DisposeAsync"/> the <see cref="ConsoleLogger"/>
     /// </summary>
-    public async ValueTask DisposeAsync() => await Task.Run(Console.Clear);
+    public async ValueTask DisposeAsync() => await Task.Run(Console.Clear).ConfigureAwait(false);
 }
