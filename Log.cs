@@ -69,7 +69,7 @@ public class Log : ILog
     public static async Task Write<T>(Exception ex)
     {
         ILogComponent component = GetDefaultComponentFromType<T>();
-        await Write<T>(component, ex);
+        await Write<T>(component, ex).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -79,9 +79,9 @@ public class Log : ILog
     /// <param name="ex">The <see cref="Exception"/></param>
     public static async Task Write<T>(ILogComponent component, Exception ex)
     {
-        await Write<T>(component, LogLevels.Error, ex.Message);
-        await Write<T>(component, LogLevels.Error, "");
-        await Write<T>(component, LogLevels.Error, ex.StackTrace);
+        await Write<T>(component, LogLevels.Error, ex.Message).ConfigureAwait(false);
+        await Write<T>(component, LogLevels.Error, "").ConfigureAwait(false);
+        await Write<T>(component, LogLevels.Error, ex.StackTrace).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -92,20 +92,20 @@ public class Log : ILog
     public static async Task Write<T>(AggregateException ex)
     {
         ILogComponent component = GetDefaultComponentFromType<T>();
-        await Write<T>(component, ex);
+        await Write<T>(component, ex).ConfigureAwait(false);
     }
 
     public static async Task Write<T>(ILogComponent component, AggregateException ex)
     {
-        await Write<T>(component, LogLevels.Error, ex.Message);
-        await Write<T>(component, LogLevels.Error, "");
-        await Write<T>(component, LogLevels.Error, ex.StackTrace);
-        await Write<T>(component, LogLevels.Error, "");
+        await Write<T>(component, LogLevels.Error, ex.Message).ConfigureAwait(false);
+        await Write<T>(component, LogLevels.Error, "").ConfigureAwait(false);
+        await Write<T>(component, LogLevels.Error, ex.StackTrace).ConfigureAwait(false);
+        await Write<T>(component, LogLevels.Error, "").ConfigureAwait(false);
 
         foreach (var innerException in ex.InnerExceptions)
         {
-            await Write<T>(component, innerException);
-            await Write<T>(component, LogLevels.Error, "");
+            await Write<T>(component, innerException).ConfigureAwait(false);
+            await Write<T>(component, LogLevels.Error, "").ConfigureAwait(false);
         }
     }
 
@@ -117,7 +117,7 @@ public class Log : ILog
     public static async Task Write<T>(string line)
     {
         ILogComponent component = GetDefaultComponentFromType<T>();
-        await Write<T>(component, LogLevels.Default, line);
+        await Write<T>(component, LogLevels.Default, line).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -129,7 +129,7 @@ public class Log : ILog
     public static async Task Write<T>(LogLevels logLevel, string line)
     {
         ILogComponent component = GetDefaultComponentFromType<T>();
-        await Write<T>(component, logLevel, line);
+        await Write<T>(component, logLevel, line).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -156,7 +156,7 @@ public class Log : ILog
             throw new LogNotInitializedException();
                 
         foreach (ILogger logger in Loggers) 
-            await logger.Write(message);
+            await logger.Write(message).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -177,19 +177,19 @@ public class Log : ILog
     /// <returns>A <see cref="Task"/> to wait on</returns>
     public async Task WriteLogHeader<T>(string applicationName)
     {
-        await Write<T>($"{applicationName} {Versions.GetVersion()}");
-        await Write<T>($"User: {Environment.UserName}");
-        await Write<T>($"Date: {DateTime.Today:dd.MM.yyyy}");
-        await Write<T>($"OS: {Environment.OSVersion}");
-        await Write<T>($"CLR-Version: {Environment.Version}");
+        await Write<T>($"{applicationName} {Versions.GetVersion()}").ConfigureAwait(false);
+        await Write<T>($"User: {Environment.UserName}").ConfigureAwait(false);
+        await Write<T>($"Date: {DateTime.Today:dd.MM.yyyy}").ConfigureAwait(false);
+        await Write<T>($"OS: {Environment.OSVersion}").ConfigureAwait(false);
+        await Write<T>($"CLR-Version: {Environment.Version}").ConfigureAwait(false);
 
-        await Write<T>("");
+        await Write<T>("").ConfigureAwait(false);
         
-        await Write<T>("FileLoggers:");
+        await Write<T>("FileLoggers:").ConfigureAwait(false);
         if (Loggers != null)
-            await Loggers.OfType<IFileLogger>().ForEach(async f => await f.WriteInformation(Write<T>));
+            await Loggers.OfType<IFileLogger>().ForEach(async f => await f.WriteInformation(Write<T>).ConfigureAwait(false)).ConfigureAwait(false);
         
-        await Write<T>("");
+        await Write<T>("").ConfigureAwait(false);
     }
 
     /// <summary>
@@ -200,7 +200,7 @@ public class Log : ILog
         if (Loggers != null)
         {
             foreach (ILogger logger in Loggers) 
-                await logger.DisposeAsync();
+                await logger.DisposeAsync().ConfigureAwait(false);
 
             Loggers.Clear();
         }
