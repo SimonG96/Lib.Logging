@@ -38,10 +38,10 @@ public class FileLogger : IFileLogger
     /// <param name="message">The <see cref="ILogMessage{T}"/></param>
     public async Task Write<T>(ILogMessage<T> message)
     {
-        await _lockObject.WaitAsync();
+        await _lockObject.WaitAsync().ConfigureAwait(false);
         try
         {
-            await _fileWriter.WriteAsync(message.ToString());
+            await _fileWriter.WriteAsync(message.ToString()).ConfigureAwait(false);
         }
         finally
         {
@@ -53,15 +53,15 @@ public class FileLogger : IFileLogger
     /// Write information about this <see cref="FileLogger"/>
     /// </summary>
     /// <param name="writeFunction">The write function</param>
-    public async Task WriteInformation(Func<string, Task> writeFunction) => await writeFunction($"LogFile path: {_fullFilePath}");
-    private async void TimerCallback(object? state) => await Flush();
+    public async Task WriteInformation(Func<string, Task> writeFunction) => await writeFunction($"LogFile path: {_fullFilePath}").ConfigureAwait(false);
+    private async void TimerCallback(object? state) => await Flush().ConfigureAwait(false);
 
     private async Task Flush()
     {
-        await _lockObject.WaitAsync();
+        await _lockObject.WaitAsync().ConfigureAwait(false);
         try
         {
-            await _fileWriter.FlushAsync();
+            await _fileWriter.FlushAsync().ConfigureAwait(false);
         }
         finally
         {
@@ -74,10 +74,10 @@ public class FileLogger : IFileLogger
     /// </summary>
     public async ValueTask DisposeAsync()
     {
-        await _timer.DisposeAsync();
+        await _timer.DisposeAsync().ConfigureAwait(false);
 
-        await Flush();
-        await _fileWriter.DisposeAsync();
+        await Flush().ConfigureAwait(false);
+        await _fileWriter.DisposeAsync().ConfigureAwait(false);
 
         _lockObject.Dispose();
     }
